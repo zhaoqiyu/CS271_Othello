@@ -18,6 +18,14 @@ public class Player {
         this.otherPlayer = temp;
     }
 
+    public Player(){}
+
+    public Player copy(){
+        Player rtv = new Player();
+        rtv.curPlayer = this.curPlayer;
+        rtv.otherPlayer = this.otherPlayer;
+        return rtv;
+    }
     /**
      * Allow player to enter coordinate for next move
      */
@@ -75,10 +83,10 @@ public class Player {
             Move chosenMove;
             int openSpaces = 64-(theBoard.count('X') + theBoard.count('O'));
             if(openSpaces <= AI.MAX_SEARCH_DEPTH) {
-                chosenMove = AI.alphaBetaSearch(theBoard, curPlayer);
+                chosenMove = AI.alphaBetaSearch(theBoard, this);
             }
             else{
-                chosenMove = AI.findMoveMonteCarlo(curPlayer, theBoard);
+                chosenMove = AI.findMoveMonteCarlo(this, theBoard);
             }
             theBoard.makeMove(chosenMove);
             System.out.println("Computer selected " + chosenMove);

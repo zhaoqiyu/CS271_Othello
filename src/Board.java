@@ -43,6 +43,7 @@
 //}
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Board {
 
@@ -121,8 +122,8 @@ public class Board {
     /**
      * @return true if the given player has a larger score
      */
-    public boolean winnerIs(char player) {
-        if (count(player) > count(Player.switchPlayer(player))) {
+    public boolean winnerIs(Player player) {
+        if (count(player.curPlayer) > count(player.otherPlayer)) {
             return true;
         }
         return false;
@@ -132,8 +133,8 @@ public class Board {
      * print out the current score
      */
     public void showScore() {
-        System.out.println("X: " + count('X'));
-        System.out.println("O: " + count('O'));
+        System.out.println("Black: " + count('B'));
+        System.out.println("White: " + count('W'));
     }
 
     /**
@@ -148,48 +149,50 @@ public class Board {
     /**
      * Count how many times a character occurs on the board
      *
-     * @param team
+     * @param color
      *            The char to look for
      * @return int the number of times the char occurs
      */
-    public int count(char team) {
+    public int count(char color) {
         int count = 0;
         for (char[] row : board) {
             for (char position : row) {
-                if (position == team)
+                if (position == color)
                     count++;
             }
         }
         return count;
     }
 
-    public int scoreDifference(char player) {
-        char otherPlayer = Othello.switchPlayer(player);
-        return count(player) - count(otherPlayer);
+    public int scoreDifference(Player player) {
+        return count(player.curPlayer) - count(player.otherPlayer);
     }
 
     /**
      * Makes random valid moves until the gameboard is finished and neither player
      * can make a move
      *
-     * @param playerJustWent
-     *            The player that made the last move
+     * @param player
+     *            The duplicated player object
      */
-    public void finishRandomly(char playerJustWent) {
-        char player = Othello.switchPlayer(playerJustWent);
-        ArrayList<Move> possibleMoves = this.findPosMoves(player);
+    public void finishRandomly(Player player) {
+        //Start from otherPlayer
+        //char player = Othello.switchPlayer(playerJustWent);
+        player.switchPlayer();
+        ArrayList<Move> possibleMoves = this.findPosMoves(player.curPlayer);
 
         // Keep make moves as long as one of the players can go
-        while (possibleMoves.size() != 0 || this.findPosMoves(playerJustWent).size() != 0) {
+        while (possibleMoves.size() != 0 || this.findPosMoves(player.otherPlayer).size() != 0) {
 
             if (possibleMoves.size() > 0) {
                 Move selectedMove = selectRandom(possibleMoves);
                 this.makeMove(selectedMove);
             }
+            player.switchPlayer();
 
-            playerJustWent = player;
-            player = Othello.switchPlayer(player);
-            possibleMoves = this.findPosMoves(player);
+            //playerJustWent = player;
+            //player = Othello.switchPlayer(player);
+            possibleMoves = this.findPosMoves(player.curPlayer);
         }
     }
 
@@ -200,7 +203,8 @@ public class Board {
      *            ArrayList
      */
     public <T> T selectRandom(ArrayList<T> theList) {
-        int randNum = Othello.randGen.nextInt(theList.size());
+        Random randGen = new Random();
+        int randNum = randGen.nextInt(theList.size());
         return theList.get(randNum);
     }
 

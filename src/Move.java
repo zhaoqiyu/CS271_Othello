@@ -114,11 +114,11 @@ public class Move {
             char peiceAtCurrentPos = board.findStoneAt(r, c);
 
             // This position belongs to opponent
-            if (peiceAtCurrentPos != player && peiceAtCurrentPos != '-') {
+            if (peiceAtCurrentPos != color && peiceAtCurrentPos != '0') {
                 positions.add(curPosition);
             }
             // This position belongs to this player
-            else if (peiceAtCurrentPos == player) {
+            else if (peiceAtCurrentPos == color) {
                 tileOnBothSides = true;
                 break;
             }

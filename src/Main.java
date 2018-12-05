@@ -10,11 +10,11 @@ import java.util.Scanner;
 import java.util.Random;
 
 public class Main {
-    private Scanner scnr = new Scanner(System.in);
-    private Player player = new Player();
+    private static Scanner scnr = new Scanner(System.in);
+    private static Player player = new Player();
 
 
-    public void main(String[] args) {
+    public static void main(String[] args) {
 
         boolean playAgain;
         char curPlayer, otherPlayer;
@@ -27,7 +27,8 @@ public class Main {
         // curPlayer will go first.
 //        if (scnr.nextLine().contains("y")) {
 //            curPlayer = 'X';
-//            otherPlayer = 'O';
+//            otherPlay1.3
+//            er = 'O';
 //        } else {
 //            curPlayer = 'O';
 //            otherPlayer = 'X';

@@ -10,8 +10,8 @@ public class AI {
      * @param player The char of the player making this move
      * @return The Move that is found to be good
      */
-    public static Move findMoveMonteCarlo(char player, Board board) {
-        ArrayList<Move> possibleMoves = board.findPosMoves(player);
+    public static Move findMoveMonteCarlo(Player player, Board board) {
+        ArrayList<Move> possibleMoves = board.findPosMoves(player.curPlayer);
         Move bestMove = possibleMoves.get(0);
 
         // Run through the different moves the current player can make
@@ -37,12 +37,13 @@ public class AI {
      * Estimate how often this board leads to a win if played out randomly.
      * Score returned is on a scale 0 - 100.
      */
-    private static double scoreTheBoard(char player, Board board) {
+    private static double scoreTheBoard(Player player, Board board) {
         double winCount = 0;
         final int TRIALS = 4000;
         for (int i = 0; i < TRIALS; i++) {
             Board newBoard = new Board(board);
-            newBoard.finishRandomly(player);
+            Player tempPlayer = player.copy();
+            newBoard.finishRandomly(tempPlayer);
             if (newBoard.winnerIs(player)) {
                 winCount += 1;
             }
@@ -59,17 +60,18 @@ public class AI {
      * @return The best Move available. Returns null if there are no
      * legal moves from this state.
      */
-    public static Move alphaBetaSearch(Board board, char player) {
+    public static Move alphaBetaSearch(Board board, Player player) {
         Move bestMove = null;
         int alpha = Integer.MIN_VALUE;
         int beta = Integer.MAX_VALUE;
         boolean getFirstMove = MAX_SEARCH_DEPTH==0;
 
-        for (Move pos : board.findPosMoves(player)) {
+        for (Move pos : board.findPosMoves(player.curPlayer)) {
             if (getFirstMove) return pos;
             Board newState = new Board(board);
+            Player tempPlayer = player.copy();
             newState.makeMove(pos);
-            int val = minValue(newState,player, MAX_SEARCH_DEPTH-1, alpha, beta);
+            int val = minValue(newState,tempPlayer, MAX_SEARCH_DEPTH-1, alpha, beta);
             if (val > alpha) {
                 alpha = val;
                 bestMove = pos;
@@ -86,10 +88,10 @@ public class AI {
      * Returns the largest value of its children, or the score difference
      * of this Board.
      */
-    public static int maxValue(Board state, char player, int depth, int alpha, int beta) {
+    public static int maxValue(Board state, Player player, int depth, int alpha, int beta) {
         if (depth == 0) return state.scoreDifference(player);
         int bestVal = Integer.MIN_VALUE;
-        for (Move pos : state.findPosMoves(player)) {
+        for (Move pos : state.findPosMoves(player.curPlayer)) {
             Board newState = new Board(state);
             newState.makeMove(pos);
             int val = minValue(newState,player, depth-1, alpha, beta);
@@ -107,11 +109,11 @@ public class AI {
         }
         // No legal move was available so bestVal was never changed
         if(bestVal==Integer.MIN_VALUE) {
-            char otherPlayer = Main.switchPlayer(player);
+            //char otherPlayer = Main.switchPlayer(player);
 
             // If the other player can go, the value of this node will be
             // the worst instead of the best for this player
-            if(state.findPosMoves(otherPlayer).size() > 0) {
+            if(state.findPosMoves(player.otherPlayer).size() > 0) {
                 return minValue(state, player, depth, alpha, beta);
             }
             // Otherwise return the score difference for the current state
@@ -125,11 +127,11 @@ public class AI {
      * Returns the smallest value of its children, or the score difference
      *  of this Board.
      */
-    public static int minValue(Board state,char player, int depth, int alpha, int beta) {
+    public static int minValue(Board state,Player player, int depth, int alpha, int beta) {
         if (depth == 0) return state.scoreDifference(player);
         int bestVal = Integer.MAX_VALUE;
-        char otherPlayer = Main.switchPlayer(player);
-        for (Move pos : state.findPosMoves(otherPlayer)) {
+        //char otherPlayer = Main.switchPlayer(player);
+        for (Move pos : state.findPosMoves(player.otherPlayer)) {
             Board newState = new Board(state);
             newState.makeMove(pos);
             int val = maxValue(newState, player, depth-1, alpha, beta);
@@ -149,7 +151,7 @@ public class AI {
 
             // If the given player can go, the value of this node will be
             // the best instead of the worst for them.
-            if(state.findPosMoves(player).size() > 0) {
+            if(state.findPosMoves(player.curPlayer).size() > 0) {
                 return maxValue(state, player, depth, alpha, beta);
             }
             // Otherwise return the score difference for the current state
