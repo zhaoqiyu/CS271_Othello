@@ -1,57 +1,30 @@
-//public class Main {
-//    public static void main(String[] args) {
-//
-//	// write your code here
-//    }
-//}
-
-import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Random;
 
 public class Main {
-    private static Scanner scnr = new Scanner(System.in);
+    private static Scanner scanner = new Scanner(System.in);
     private static Player player = new Player();
 
 
     public static void main(String[] args) {
 
         boolean playAgain;
-        char curPlayer, otherPlayer;
+        System.out.println("You are White's");
 
-
-        // Give human the option to go first
-        System.out.println("You are W's");
-
-        // Human is always W's
-        // curPlayer will go first.
-//        if (scnr.nextLine().contains("y")) {
-//            curPlayer = 'X';
-//            otherPlay1.3
-//            er = 'O';
-//        } else {
-//            curPlayer = 'O';
-//            otherPlayer = 'X';
-//        }
-
-        // The game loop
         do{
-            Board theBoard = new Board();
+            Board board = new Board();
             boolean gameOver = false;
-            theBoard.showGameInfo();
-
+            board.showGameInfo();
             // The turn loop
             do {
-                gameOver = player.takeTurn(theBoard);
+                gameOver = player.takeTurn(board);
 
-                theBoard.showGameInfo();
+                board.showGameInfo();
                 player.switchPlayer();
             } while (!gameOver);
 
-            // Ask if the Human would like to play again
-            System.out.print("Play again?(y/n): ");
-            scnr.nextLine();
-            playAgain = scnr.nextLine().contains("y");
+            System.out.print("Another Game?(y/n): ");
+            scanner.nextLine();
+            playAgain = scanner.nextLine().contains("y");
 
         }while (playAgain);
     }

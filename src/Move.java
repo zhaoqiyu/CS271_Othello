@@ -61,9 +61,7 @@ public class Move {
     }
 
     /**
-     * Checks if this move would flip over any of the opponent's pieces
-     * @return true if this move would flip over at least 1 opponent's piece
-     * false otherwise
+     * Checks if this move can flip over any of the opponent's pieces
      */
     private boolean flipAnyOver() {
         for (int i = -1; i < 2; i++) {
@@ -95,42 +93,34 @@ public class Move {
     }
 
     /**
-     * Determines the positions of opponents pieces that need to be flipped over
-     * in a given direction out from this move.
-     * @param searchDown
-     *            +1 to go down, -1 to go up
-     * @param searchRight
-     *            +1 to go right, -1 to go left
-     * @return
+     * Determines the positions of opponents stones that need to be flipped over
      */
     private ArrayList<int[]> findPositsToFlip(int searchDown, int searchRight) {
-        ArrayList<int[]> positions = new ArrayList<int[]>();
+        ArrayList<int[]> positions = new ArrayList<>();
         boolean tileOnBothSides = false;
         int r = row + searchDown;
         int c = col + searchRight;
 
         while (onBoard(r, c)) {
             int[] curPosition = { r, c };
-            char peiceAtCurrentPos = board.findStoneAt(r, c);
+            char stoneAtCurPos = board.findStoneAt(r, c);
 
             // This position belongs to opponent
-            if (peiceAtCurrentPos != color && peiceAtCurrentPos != '0') {
+            if (stoneAtCurPos != color && stoneAtCurPos != '0') {
                 positions.add(curPosition);
             }
             // This position belongs to this player
-            else if (peiceAtCurrentPos == color) {
+            else if (stoneAtCurPos == color) {
                 tileOnBothSides = true;
                 break;
             }
-            // This position doesn't belong to anyone
+            // This position is empty
             else {
                 break;
             }
             r += searchDown;
             c += searchRight;
         }
-        // The player can only capture opponent pieces if the player has
-        // a piece on both sides of this line of opponent pieces
         if (!tileOnBothSides) {
             positions.clear();
         }
@@ -146,7 +136,7 @@ public class Move {
     }
 
     /**
-     * A representation of this move
+     * Printable move represent.
      */
     public String toString() {
         return "Row: " + row + " Col: " + col;

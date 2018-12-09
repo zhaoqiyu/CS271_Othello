@@ -57,10 +57,7 @@ public class Board {
                                         {'0','0','0','0','0','0','0','0'}};
 
     /**
-     * Creates a gameboard with an identical board as another gameboard
-     *
-     * @param original
-     *            the gameboard to copy
+     * Creates a gameboard with custome setup
      */
     public Board(Board original) {
         for (int row = 0; row < 8; row++) {
@@ -120,13 +117,10 @@ public class Board {
     }
 
     /**
-     * @return true if the given player has a larger score
+     * @return true if the given player wins
      */
     public boolean winnerIs(Player player) {
-        if (count(player.curPlayer) > count(player.otherPlayer)) {
-            return true;
-        }
-        return false;
+        return count(player.curPlayer) > count(player.otherPlayer);
     }
 
     /**
@@ -176,8 +170,6 @@ public class Board {
      *            The duplicated player object
      */
     public void finishRandomly(Player player) {
-        //Start from otherPlayer
-        //char player = Othello.switchPlayer(playerJustWent);
         player.switchPlayer();
         ArrayList<Move> possibleMoves = this.findPosMoves(player.curPlayer);
 
@@ -189,9 +181,6 @@ public class Board {
                 this.makeMove(selectedMove);
             }
             player.switchPlayer();
-
-            //playerJustWent = player;
-            //player = Othello.switchPlayer(player);
             possibleMoves = this.findPosMoves(player.curPlayer);
         }
     }
@@ -212,7 +201,7 @@ public class Board {
      * @return An ArrayList of all the possible moves the given player can make
      */
     public ArrayList<Move> findPosMoves(char player) {
-        ArrayList<Move> possibleMoves = new ArrayList<Move>();
+        ArrayList<Move> possibleMoves = new ArrayList<>();
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 Move posMove = new Move(row, col, player, this);

@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
 
 public class Player {
@@ -52,14 +51,11 @@ public class Player {
             return getMove(player, theBoard);
         }
     }
-    /**
-     * Runs through one turn in the game. Returns True if the game is
-     * over (neither player can go).
-     */
+
+
     public boolean takeTurn(Board theBoard) {
         boolean gameOver = false;
 
-        // Check if the current player can play
         ArrayList<Move> curPlayerMoves = theBoard.findPosMoves(curPlayer);
         boolean curPlayerCanPlay = curPlayerMoves.size() > 0;
 
@@ -68,7 +64,7 @@ public class Player {
             System.out.println(person + " could not go");
 
             // If neither player can go, the game is over
-            //switchPlayer
+
             ArrayList<Move> othPlayerMoves = theBoard.findPosMoves(otherPlayer);
             gameOver = othPlayerMoves.size() == 0;
         }
@@ -81,9 +77,9 @@ public class Player {
         // Current player is computer
         else if (curPlayer == 'B') {
             Move chosenMove;
-            int openSpaces = 64-(theBoard.count('X') + theBoard.count('O'));
+            int openSpaces = 64-(theBoard.count('B') + theBoard.count('W'));
             if(openSpaces <= AI.MAX_SEARCH_DEPTH) {
-                chosenMove = AI.alphaBetaSearch(theBoard, this);
+                chosenMove = AI.alphaBetaPruning(theBoard, this);
             }
             else{
                 chosenMove = AI.findMoveMonteCarlo(this, theBoard);
