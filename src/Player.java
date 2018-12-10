@@ -62,11 +62,13 @@ public class Player {
         if (!curPlayerCanPlay) {
             String person = (curPlayer == 'W') ? "You" : "Computer";
             System.out.println(person + " could not go");
+            gameOver = true;
 
-            // If neither player can go, the game is over
 
-            ArrayList<Move> othPlayerMoves = theBoard.findPosMoves(otherPlayer);
-            gameOver = othPlayerMoves.size() == 0;
+            // If current player cannot go, the game is over
+
+            //ArrayList<Move> othPlayerMoves = theBoard.findPosMoves(otherPlayer);
+//            gameOver = othPlayerMoves.size() == 0;
         }
         // Current player is human
         else if (curPlayer == 'W') {
@@ -78,11 +80,19 @@ public class Player {
         else if (curPlayer == 'B') {
             Move chosenMove;
             int openSpaces = 64-(theBoard.count('B') + theBoard.count('W'));
-            if(openSpaces <= AI.MAX_SEARCH_DEPTH) {
+            if(openSpaces <= 32) {
+                long startTime = System.nanoTime();
                 chosenMove = AI.alphaBetaPruning(theBoard, this);
+                long endTime = System.nanoTime();
+                long duration = (endTime - startTime)/1000000;  //divide by 1000000 to get milliseconds.
+                System.out.println("MiniMax used: " + duration + " ms");
             }
             else{
+                long startTime = System.nanoTime();
                 chosenMove = AI.findMoveMonteCarlo(this, theBoard);
+                long endTime = System.nanoTime();
+                long duration = (endTime - startTime)/1000000;  //divide by 1000000 to get milliseconds.
+                System.out.println("MonteCarlo used: " + duration + " ms");
             }
             theBoard.makeMove(chosenMove);
             System.out.println("Computer selected " + chosenMove);

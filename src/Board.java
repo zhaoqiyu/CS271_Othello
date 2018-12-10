@@ -123,6 +123,9 @@ public class Board {
         return count(player.curPlayer) > count(player.otherPlayer);
     }
 
+    public String winnerIs(){
+        return count('B') > count('W') ? "Computer" : "Player";
+    }
     /**
      * print out the current score
      */

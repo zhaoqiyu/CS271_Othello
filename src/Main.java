@@ -15,12 +15,20 @@ public class Main {
             boolean gameOver = false;
             board.showGameInfo();
             // The turn loop
-            do {
+            for(;;){
                 gameOver = player.takeTurn(board);
 
                 board.showGameInfo();
+
+                if (gameOver) {break;}
                 player.switchPlayer();
-            } while (!gameOver);
+
+            }
+
+            System.out.println("Game Over!");
+            System.out.println("Winner is " + board.winnerIs());
+
+
 
             System.out.print("Another Game?(y/n): ");
             scanner.nextLine();
